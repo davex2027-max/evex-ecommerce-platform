@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: evex-ecommerce
+    runtime: docker
+    repo: https://github.com/davex2027-max/evex-ecommerce-platform
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: CORS_ORIGIN
+        value: https://evex-company-site.onrender.com,http://localhost:3000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+
+staticSites:
+  - name: evex-company-site
+    repo: https://github.com/davex2027-max/evex-ecommerce-platform
+    plan: free
+    buildCommand: npm install && npm run build
+    buildDirectory: company-site
+    publishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,11 @@
+:root{
+    --bg: #05070f;
+    --bg-panel: #0a1128;
+    --bg-panel-2: #0c142f;
+    --cyan: #38bdf8;
+    --violet: #8b5cf6;
+    --ink: #eef2fb;
+    --muted: #8a93ac;
+    --line: rgba(148,163,196,0.14);
+    --glow: rgba(56,189,248,0.28);
+}
