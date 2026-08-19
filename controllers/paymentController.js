@@ -1,7 +1,12 @@
 const Order = require('../models/Order');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_placeholder'
+    ? require('stripe')(process.env.STRIPE_SECRET_KEY)
+    : null;
 
 const createPaymentIntent = async (req, res) => {
+    if (!stripe) {
+        return res.status(503).json({ message: "Stripe not configured" });
+    }
     try {
         const order = await Order.findById(req.params.id);
 
@@ -27,6 +32,9 @@ const createPaymentIntent = async (req, res) => {
 };
 
 const stripeWebhook = async (req, res) => {
+    if (!stripe) {
+        return res.status(503).json({ message: "Stripe not configured" });
+    }
     const sig = req.headers['stripe-signature'];
 
     let event;
