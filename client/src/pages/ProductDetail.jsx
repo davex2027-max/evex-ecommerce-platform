@@ -3,24 +3,28 @@ import { useParams } from 'react-router-dom';
 import API from '../api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
-    const [reviewError, setReviewError] = useState('');
-    const [reviewSuccess, setReviewSuccess] = useState('');
+    const [reviewSubmitting, setReviewSubmitting] = useState(false);
     const { addToCart } = useCart();
     const { user } = useAuth();
+    const toast = useToast();
 
     const fetchProduct = async () => {
         try {
             const { data } = await API.get(`/products/${id}`);
             setProduct(data);
         } catch (err) {
+            setError('Product not found.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -34,33 +38,39 @@ const ProductDetail = () => {
     const handleAddToCart = async () => {
         try {
             await addToCart(id, quantity);
-            alert('Added to cart!');
+            toast.success('Added to cart!');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to add to cart');
+            toast.error(err.response?.data?.message || 'Failed to add to cart');
         }
     };
 
     const handleReview = async (e) => {
         e.preventDefault();
-        setReviewError('');
-        setReviewSuccess('');
+        setReviewSubmitting(true);
         try {
             await API.post(`/products/${id}/reviews`, { rating, comment });
-            setReviewSuccess('Review added!');
+            toast.success('Review added!');
             setComment('');
+            setRating(5);
             fetchProduct();
         } catch (err) {
-            setReviewError(err.response?.data?.message || 'Failed to add review');
+            toast.error(err.response?.data?.message || 'Failed to add review');
+        } finally {
+            setReviewSubmitting(false);
         }
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (!product) return <p>Product not found.</p>;
+    const handleImageError = (e) => {
+        e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect fill="%23eee" width="400" height="400"/><text fill="%23999" x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16">No Image</text></svg>';
+    };
+
+    if (loading) return <LoadingSpinner text="Loading product..." />;
+    if (error || !product) return <div className="alert alert-error">{error || 'Product not found.'}</div>;
 
     return (
         <div className="product-detail">
             <div className="product-detail-main">
-                <img src={product.imageUrl} alt={product.name} />
+                <img src={product.imageUrl} alt={product.name} onError={handleImageError} />
                 <div className="product-detail-info">
                     <h1>{product.name}</h1>
                     <p className="product-brand">{product.brand}</p>
@@ -85,8 +95,8 @@ const ProductDetail = () => {
             </div>
 
             <div className="reviews-section">
-                <h3>Reviews</h3>
-                {product.reviews.length === 0 && <p>No reviews yet.</p>}
+                <h3>Reviews ({product.reviews.length})</h3>
+                {product.reviews.length === 0 && <p>No reviews yet. Be the first to review!</p>}
                 {product.reviews.map((review) => (
                     <div key={review._id} className="review">
                         <strong>{review.name}</strong>
@@ -98,8 +108,6 @@ const ProductDetail = () => {
                 {user && (
                     <div className="review-form">
                         <h4>Write a Review</h4>
-                        {reviewError && <div className="alert alert-error">{reviewError}</div>}
-                        {reviewSuccess && <div className="alert alert-success">{reviewSuccess}</div>}
                         <form onSubmit={handleReview}>
                             <div className="form-group">
                                 <label>Rating</label>
@@ -115,7 +123,9 @@ const ProductDetail = () => {
                                 <label>Comment</label>
                                 <textarea value={comment} onChange={(e) => setComment(e.target.value)} required />
                             </div>
-                            <button type="submit" className="btn btn-primary">Submit Review</button>
+                            <button type="submit" className="btn btn-primary" disabled={reviewSubmitting}>
+                                {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                            </button>
                         </form>
                     </div>
                 )}

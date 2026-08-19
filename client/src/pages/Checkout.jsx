@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
+import EmptyState from '../components/EmptyState';
 
 const Checkout = () => {
     const [address, setAddress] = useState('');
@@ -13,6 +15,7 @@ const Checkout = () => {
     const [error, setError] = useState('');
     const { cart, fetchCart } = useCart();
     const navigate = useNavigate();
+    const toast = useToast();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,14 +28,16 @@ const Checkout = () => {
             });
             await fetchCart();
             if (paymentMethod === 'stripe') {
-                const { data } = await API.post(`/payment/${order._id}/pay`);
-                alert(`Order placed! Stripe client secret received. (Payment integration is live - use test card 4242 4242 4242 4242)`);
+                await API.post(`/payment/${order._id}/pay`);
+                toast.success('Order placed! Use test card 4242 4242 4242 4242');
             } else {
-                alert('Order placed successfully!');
+                toast.success('Order placed successfully!');
             }
             navigate('/my-orders');
         } catch (err) {
-            setError(err.response?.data?.message || 'Order failed');
+            const msg = err.response?.data?.message || 'Order failed';
+            setError(msg);
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
@@ -42,7 +47,13 @@ const Checkout = () => {
         return (
             <div className="checkout-page">
                 <h2>Checkout</h2>
-                <p>Your cart is empty. <a href="/products">Shop now</a></p>
+                <EmptyState
+                    icon="🛒"
+                    title="Your cart is empty"
+                    message="Add some products before checking out."
+                    actionLabel="Shop Now"
+                    onAction={() => navigate('/products')}
+                />
             </div>
         );
     }
@@ -88,7 +99,7 @@ const Checkout = () => {
                         <p><strong>Total: ${(cart.totalPrice + (cart.totalPrice > 500 ? 0 : 50) + cart.totalPrice * 0.1).toFixed(2)}</strong></p>
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                    <button type="submit" className="btn btn-primary btn-block" disabled={loading} style={{ marginTop: '16px' }}>
                         {loading ? 'Placing Order...' : 'Place Order'}
                     </button>
                 </form>

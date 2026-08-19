@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../api';
+import LoadingSpinner from '../components/LoadingSpinner';
+import EmptyState from '../components/EmptyState';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     const [keyword, setKeyword] = useState('');
     const [category, setCategory] = useState('');
     const [page, setPage] = useState(1);
@@ -13,6 +16,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
         try {
             setLoading(true);
+            setError('');
             const params = { page, pageSize: 12 };
             if (keyword) params.keyword = keyword;
             if (category) params.category = category;
@@ -20,6 +24,7 @@ const ProductList = () => {
             setProducts(data.products);
             setPages(data.pages);
         } catch (err) {
+            setError('Failed to load products. Please try again.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -34,6 +39,10 @@ const ProductList = () => {
         e.preventDefault();
         setPage(1);
         fetchProducts();
+    };
+
+    const handleImageError = (e) => {
+        e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%23eee" width="200" height="200"/><text fill="%23999" x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="14">No Image</text></svg>';
     };
 
     return (
@@ -61,15 +70,21 @@ const ProductList = () => {
                 </select>
             </div>
 
+            {error && <div className="alert alert-error">{error}</div>}
+
             {loading ? (
-                <p>Loading...</p>
+                <LoadingSpinner text="Loading products..." />
             ) : products.length === 0 ? (
-                <p>No products found.</p>
+                <EmptyState
+                    icon="🔍"
+                    title="No products found"
+                    message="Try adjusting your search or filter."
+                />
             ) : (
                 <div className="product-grid">
                     {products.map((product) => (
                         <Link to={`/products/${product._id}`} key={product._id} className="product-card">
-                            <img src={product.imageUrl} alt={product.name} />
+                            <img src={product.imageUrl} alt={product.name} onError={handleImageError} />
                             <div className="product-info">
                                 <h3>{product.name}</h3>
                                 <p className="product-brand">{product.brand}</p>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -8,13 +8,15 @@ const Login = () => {
     const [formError, setFormError] = useState('');
     const { login, loading } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormError('');
         try {
             await login(email, password);
-            navigate('/');
+            navigate(from, { replace: true });
         } catch (err) {
             setFormError(err.message);
         }
@@ -33,7 +35,7 @@ const Login = () => {
                     <label>Password</label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
                     {loading ? 'Logging in...' : 'Login'}
                 </button>
             </form>

@@ -32,23 +32,43 @@ export const CartProvider = ({ children }) => {
     }, [user]);
 
     const addToCart = async (productId, quantity = 1) => {
-        const { data } = await API.post('/cart/add', { productId, quantity });
-        setCart(data);
+        try {
+            const { data } = await API.post('/cart/add', { productId, quantity });
+            setCart(data);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     };
 
     const updateQuantity = async (productId, quantity) => {
-        const { data } = await API.put(`/cart/${productId}`, { quantity });
-        setCart(data);
+        try {
+            const { data } = await API.put(`/cart/${productId}`, { quantity });
+            setCart(data);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     };
 
     const removeItem = async (productId) => {
-        const { data } = await API.delete(`/cart/${productId}`);
-        setCart(data);
+        try {
+            const { data } = await API.delete(`/cart/${productId}`);
+            setCart(data);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     };
 
     const clearCart = async () => {
-        const { data } = await API.delete('/cart');
-        setCart(data);
+        try {
+            const { data } = await API.delete('/cart');
+            setCart(data);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     };
 
     return (
