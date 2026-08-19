@@ -12,15 +12,30 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const { stripeWebhook } = require('./controllers/paymentController');
 const cors = require('cors');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const { securityMiddleware } = require('./middleware/securityMiddleware');
 
 const app = express();
 
+securityMiddleware(app);
+
 app.post('/api/payment/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
 
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',');
 app.use(cors({
     credentials: true,
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin.trim())) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['X-Total-Count'],
+    maxAge: 600,
 }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
