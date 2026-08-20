@@ -12,6 +12,7 @@ import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/CartPage';
 import Checkout from './pages/Checkout';
 import MyOrders from './pages/MyOrders';
+import PaymentCallback from './pages/PaymentCallback';
 import AdList from './pages/AdList';
 import MyAds from './pages/MyAds';
 import AdminPanel from './pages/AdminPanel';
@@ -40,6 +41,9 @@ function App() {
                                 } />
                                 <Route path="/my-orders" element={
                                     <ProtectedRoute><MyOrders /></ProtectedRoute>
+                                } />
+                                <Route path="/payment/callback" element={
+                                    <ProtectedRoute><PaymentCallback /></ProtectedRoute>
                                 } />
                                 <Route path="/ads" element={<AdList />} />
                                 <Route path="/my-ads" element={

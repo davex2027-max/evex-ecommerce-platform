@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import API from '../api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
+import { formatPrice } from '../utils/format';
 
 const MyOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -41,7 +42,7 @@ const MyOrders = () => {
                         <div key={order._id} className="order-card">
                             <h4>Order #{order._id.slice(-6)}</h4>
                             <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                            <p>Total: ${order.totalPrice.toFixed(2)}</p>
+                            <p>Total: {formatPrice(order.totalPrice)}</p>
                             <p>Payment: {order.paymentMethod.toUpperCase()}</p>
                             <p>
                                 Status:{' '}
@@ -55,7 +56,7 @@ const MyOrders = () => {
                             </p>
                             <div className="order-items">
                                 {order.items.map((item, i) => (
-                                    <p key={i}>{item.name} x{item.quantity} - ${item.price.toFixed(2)}</p>
+                                    <p key={i}>{item.name} x{item.quantity} - {formatPrice(item.price)}</p>
                                 ))}
                             </div>
                         </div>

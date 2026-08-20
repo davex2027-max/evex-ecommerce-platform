@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { formatPrice } from '../utils/format';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -75,7 +76,7 @@ const ProductDetail = () => {
                     <h1>{product.name}</h1>
                     <p className="product-brand">{product.brand}</p>
                     <p className="product-rating">{'⭐'.repeat(Math.round(product.rating))} ({product.numReviews} reviews)</p>
-                    <p className="product-price">${product.price.toFixed(2)}</p>
+                    <p className="product-price">{formatPrice(product.price)}</p>
                     <p className="product-category">Category: {product.category}</p>
                     <p className="product-description">{product.description}</p>
                     <p className="product-stock">

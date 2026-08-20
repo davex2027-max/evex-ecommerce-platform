@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import API from '../api';
 import { useToast } from '../context/ToastContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { formatPrice } from '../utils/format';
 
 const AdminPanel = () => {
     const [tab, setTab] = useState('users');
@@ -120,7 +121,7 @@ const AdminPanel = () => {
                                 <div key={order._id} className="order-card">
                                     <h4>Order #{order._id.slice(-6)}</h4>
                                     <p>User: {order.user?.name} ({order.user?.email})</p>
-                                    <p>Total: ${order.totalPrice.toFixed(2)}</p>
+                                    <p>Total: {formatPrice(order.totalPrice)}</p>
                                     <p>Status: {order.isPaid ? 'Paid' : 'Unpaid'} | {order.isDelivered ? 'Delivered' : 'Pending'}</p>
                                     {!order.isDelivered && (
                                         <button className="btn btn-sm btn-primary" onClick={() => markDelivered(order._id)}>Mark Delivered</button>

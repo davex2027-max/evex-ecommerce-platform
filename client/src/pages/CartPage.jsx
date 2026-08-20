@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
+import { formatPrice } from '../utils/format';
 
 const CartPage = () => {
     const { cart, updateQuantity, removeItem, loading } = useCart();
@@ -60,7 +61,7 @@ const CartPage = () => {
                         />
                         <div className="cart-item-info">
                             <h3>{item.product?.name}</h3>
-                            <p>${item.price.toFixed(2)} x {item.quantity} = ${(item.price * item.quantity).toFixed(2)}</p>
+                            <p>{formatPrice(item.price)} x {item.quantity} = {formatPrice(item.price * item.quantity)}</p>
                         </div>
                         <div className="cart-item-actions">
                             <select
@@ -79,7 +80,7 @@ const CartPage = () => {
                 ))}
             </div>
             <div className="cart-summary">
-                <h3>Total: ${cart.totalPrice.toFixed(2)}</h3>
+                <h3>Total: {formatPrice(cart.totalPrice)}</h3>
                 <button className="btn btn-primary" onClick={() => navigate('/checkout')}>
                     Proceed to Checkout
                 </button>

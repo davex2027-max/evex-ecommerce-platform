@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import API from '../api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
+import { formatPrice } from '../utils/format';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -89,7 +90,7 @@ const ProductList = () => {
                                 <h3>{product.name}</h3>
                                 <p className="product-brand">{product.brand}</p>
                                 <p className="product-rating">{'⭐'.repeat(Math.round(product.rating))} ({product.numReviews})</p>
-                                <p className="product-price">${product.price.toFixed(2)}</p>
+                                <p className="product-price">{formatPrice(product.price)}</p>
                             </div>
                         </Link>
                     ))}

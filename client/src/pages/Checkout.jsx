@@ -4,6 +4,7 @@ import API from '../api';
 import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import EmptyState from '../components/EmptyState';
+import { formatPrice } from '../utils/format';
 
 const Checkout = () => {
     const [address, setAddress] = useState('');
@@ -17,6 +18,10 @@ const Checkout = () => {
     const navigate = useNavigate();
     const toast = useToast();
 
+    const shippingPrice = cart.totalPrice > 500000 ? 0 : 50000;
+    const taxPrice = cart.totalPrice * 0.1;
+    const totalPrice = cart.totalPrice + shippingPrice + taxPrice;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -27,18 +32,19 @@ const Checkout = () => {
                 paymentMethod,
             });
             await fetchCart();
-            if (paymentMethod === 'stripe') {
-                await API.post(`/payment/${order._id}/pay`);
-                toast.success('Order placed! Use test card 4242 4242 4242 4242');
-            } else {
-                toast.success('Order placed successfully!');
+
+            if (paymentMethod === 'paystack') {
+                const { data: payment } = await API.post(`/payment/${order._id}/pay`);
+                window.location.href = payment.authorization_url;
+                return;
             }
+
+            toast.success('Order placed successfully!');
             navigate('/my-orders');
         } catch (err) {
             const msg = err.response?.data?.message || 'Order failed';
             setError(msg);
             toast.error(msg);
-        } finally {
             setLoading(false);
         }
     };
@@ -86,21 +92,20 @@ const Checkout = () => {
                     <div className="form-group">
                         <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
                             <option value="cod">Cash on Delivery</option>
-                            <option value="stripe">Credit/Debit Card (Stripe)</option>
-                            <option value="paypal">PayPal</option>
+                            <option value="paystack">Card / Transfer / USSD (Paystack)</option>
                         </select>
                     </div>
 
                     <div className="checkout-summary">
                         <h3>Order Summary</h3>
-                        <p>Subtotal: ${cart.totalPrice.toFixed(2)}</p>
-                        <p>Shipping: ${cart.totalPrice > 500 ? '0.00 (Free)' : '50.00'}</p>
-                        <p>Tax (10%): ${(cart.totalPrice * 0.1).toFixed(2)}</p>
-                        <p><strong>Total: ${(cart.totalPrice + (cart.totalPrice > 500 ? 0 : 50) + cart.totalPrice * 0.1).toFixed(2)}</strong></p>
+                        <p>Subtotal: {formatPrice(cart.totalPrice)}</p>
+                        <p>Shipping: {shippingPrice === 0 ? `${formatPrice(0)} (Free)` : formatPrice(shippingPrice)}</p>
+                        <p>Tax (10%): {formatPrice(taxPrice)}</p>
+                        <p><strong>Total: {formatPrice(totalPrice)}</strong></p>
                     </div>
 
                     <button type="submit" className="btn btn-primary btn-block" disabled={loading} style={{ marginTop: '16px' }}>
-                        {loading ? 'Placing Order...' : 'Place Order'}
+                        {loading ? 'Redirecting to Paystack...' : paymentMethod === 'paystack' ? 'Pay with Paystack' : 'Place Order'}
                     </button>
                 </form>
             </div>

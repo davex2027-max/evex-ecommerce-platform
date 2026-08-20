@@ -18,7 +18,7 @@ router.use(protect);
 router.post(
     '/',
     [
-        body('paymentMethod').isIn(['stripe', 'paypal', 'cod']).withMessage('Invalid payment method'),
+        body('paymentMethod').isIn(['paystack', 'stripe', 'cod']).withMessage('Invalid payment method'),
         body('shippingAddress.address').notEmpty().withMessage('Address is required'),
         body('shippingAddress.city').notEmpty().withMessage('City is required'),
         body('shippingAddress.postalCode').notEmpty().withMessage('Postal code is required'),

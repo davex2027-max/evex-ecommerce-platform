@@ -28,7 +28,7 @@ const createOrder = async (req, res) => {
         }));
 
         const itemsPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const shippingPrice = itemsPrice > 500 ? 0 : 50;
+        const shippingPrice = itemsPrice > 500000 ? 0 : 50000;
         const taxPrice = itemsPrice * 0.1;
         const totalPrice = itemsPrice + shippingPrice + taxPrice;
 

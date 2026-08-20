@@ -56,15 +56,15 @@ describe('Order Endpoints', () => {
                 .set('Authorization', `Bearer ${userToken}`)
                 .send({
                     shippingAddress: { address: '123 Main St', city: 'Harare', postalCode: '00263', country: 'Zimbabwe' },
-                    paymentMethod: 'stripe',
+                    paymentMethod: 'paystack',
                 });
 
             expect(res.status).toBe(201);
             expect(res.body.shippingAddress.city).toBe('Harare');
-            expect(res.body.paymentMethod).toBe('stripe');
+            expect(res.body.paymentMethod).toBe('paystack');
             expect(res.body.isPaid).toBe(false);
             expect(res.body.isDelivered).toBe(false);
-            expect(res.body.totalPrice).toBe(215.00);
+            expect(res.body.totalPrice).toBe(50165);
         });
 
         it('should reject empty cart order', async () => {
@@ -77,7 +77,7 @@ describe('Order Endpoints', () => {
                 .set('Authorization', `Bearer ${otherUser.body.token}`)
                 .send({
                     shippingAddress: { address: '123 Main St', city: 'Harare', postalCode: '00263', country: 'Zimbabwe' },
-                    paymentMethod: 'stripe',
+                    paymentMethod: 'paystack',
                 });
 
             expect(res.status).toBe(400);
