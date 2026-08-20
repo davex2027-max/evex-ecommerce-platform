@@ -1,16 +1,45 @@
 import { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowRight } from 'lucide-react';
-import { LINKS } from '../config';
 
 const NAV_LINKS = [
-    { label: 'Home', href: '#hero' },
-    { label: 'About', href: '#about' },
-    { label: 'Products', href: '#ecosystem' },
-    { label: 'Learning Hub', href: '#technology' },
-    { label: 'Business', href: '#ecosystem' },
-    { label: 'Team', href: '#team' },
-    { label: 'Contact', href: '#final-cta' },
+    { label: 'Home', type: 'route', to: '/' },
+    { label: 'About', type: 'route', to: '/about' },
+    { label: 'Products', type: 'section', to: 'ecosystem' },
+    { label: 'Team', type: 'section', to: 'team' },
+    { label: 'Contact', type: 'route', to: '/contact' },
 ];
+
+const SectionLink = ({ id, children, onNavigate }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        onNavigate?.();
+        if (location.pathname !== '/') {
+            navigate('/', { replace: true });
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 80);
+        } else {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    return (
+        <a href={`/#${id}`} onClick={handleClick}>{children}</a>
+    );
+};
+
+const NavLink = ({ link, onNavigate }) => {
+    if (link.type === 'route') {
+        return <Link to={link.to} onClick={onNavigate}>{link.label}</Link>;
+    }
+    return <SectionLink id={link.to} onNavigate={onNavigate}>{link.label}</SectionLink>;
+};
 
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -22,24 +51,26 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    const closeMenu = () => setMenuOpen(false);
+
     return (
         <>
             <nav id="navbar" className={scrolled ? 'scrolled' : ''}>
-                <a href="#hero" style={{ display: 'flex', alignItems: 'center', gap: 11, textDecoration: 'none' }}>
+                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 11, textDecoration: 'none' }}>
                     <img src="/evex-logo.png" alt="EVEX logo" className="logo-mark" />
                     <span className="display" style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--ink)', letterSpacing: '.01em' }}>
                         EVEX
                     </span>
-                </a>
+                </Link>
                 <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 34 }}>
                     {NAV_LINKS.map((l) => (
-                        <a key={l.label} href={l.href}>{l.label}</a>
+                        <NavLink key={l.label} link={l} onNavigate={closeMenu} />
                     ))}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <a href="#team" className="btn-primary" style={{ textDecoration: 'none' }}>
+                    <Link to="/careers" className="btn-primary" style={{ textDecoration: 'none' }}>
                         Join the Team <ArrowRight size={16} />
-                    </a>
+                    </Link>
                     <button id="menu-open" aria-label="Open menu" className="nav-icon-btn" onClick={() => setMenuOpen(true)}>
                         <Menu size={24} />
                     </button>
@@ -52,16 +83,16 @@ const Navbar = () => {
                     aria-label="Close menu"
                     className="nav-icon-btn"
                     style={{ position: 'absolute', top: 22, right: 24 }}
-                    onClick={() => setMenuOpen(false)}
+                    onClick={closeMenu}
                 >
                     <X size={28} />
                 </button>
                 {NAV_LINKS.map((l) => (
-                    <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+                    <NavLink key={l.label} link={l} onNavigate={closeMenu} />
                 ))}
-                <a href="#team" className="btn-primary" style={{ marginTop: 10, textDecoration: 'none' }} onClick={() => setMenuOpen(false)}>
+                <Link to="/careers" className="btn-primary" style={{ marginTop: 10, textDecoration: 'none' }} onClick={closeMenu}>
                     Join the Team
-                </a>
+                </Link>
             </div>
         </>
     );

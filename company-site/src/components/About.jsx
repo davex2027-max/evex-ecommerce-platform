@@ -1,4 +1,5 @@
-import { Lightbulb, Workflow, Globe } from 'lucide-react';
+import { Lightbulb, Workflow, Globe, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const FEATURES = [
     {
@@ -40,6 +41,11 @@ const About = () => (
                         <p className="section-text" style={{ fontSize: '.94rem' }}>{f.text}</p>
                     </div>
                 ))}
+            </div>
+            <div style={{ marginTop: 40, textAlign: 'center' }}>
+                <Link to="/about" className="btn-ghost" style={{ textDecoration: 'none' }}>
+                    Learn more about EVEX <ArrowRight size={15} />
+                </Link>
             </div>
         </div>
     </section>

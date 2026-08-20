@@ -1,35 +1,41 @@
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Ecosystem from './components/Ecosystem';
-import Why from './components/Why';
-import Technology from './components/Technology';
-import Team from './components/Team';
-import ComingSoon from './components/ComingSoon';
-import Cta from './components/Cta';
 import Footer from './components/Footer';
-import { useScrollReveal } from './hooks/useScrollReveal';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import CareersPage from './pages/CareersPage';
+import NotFound from './pages/NotFound';
 import './App.css';
 
-function App() {
-    const revealRef = useScrollReveal();
+const ScrollToTop = () => {
+    const { pathname } = useLocation();
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+};
+
+function App() {
     return (
-        <div ref={revealRef}>
+        <Router>
+            <ScrollToTop />
             <div className="bg-noise"></div>
             <Navbar />
             <main>
-                <Hero />
-                <About />
-                <Ecosystem />
-                <Why />
-                <Technology />
-                <Team />
-                <ComingSoon />
-                <Cta />
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/careers" element={<CareersPage />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
             </main>
             <Footer />
-        </div>
+        </Router>
     );
 }
 

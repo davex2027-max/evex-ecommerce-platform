@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight, BarChart3, Sparkles, GraduationCap, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useConstellation } from '../hooks/useConstellation';
 import { useHeroParallax } from '../hooks/useHeroParallax';
 
@@ -24,9 +25,9 @@ const Hero = () => {
                         <a href="#ecosystem" className="btn-primary" style={{ textDecoration: 'none' }}>
                             Explore EVEX <ArrowRight size={16} />
                         </a>
-                        <a href="#team" className="btn-ghost">
+                        <Link to="/careers" className="btn-ghost">
                             Join Our Team <ArrowUpRight size={15} />
-                        </a>
+                        </Link>
                     </div>
                 </div>
 

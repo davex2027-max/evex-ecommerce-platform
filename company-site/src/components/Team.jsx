@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useConstellation } from '../hooks/useConstellation';
 
 const Team = () => {
@@ -17,9 +18,9 @@ const Team = () => {
                         developers, designers, innovators, educators, entrepreneurs, and technology enthusiasts can
                         work together to build meaningful digital products.
                     </p>
-                    <a href="#final-cta" className="btn-primary" style={{ textDecoration: 'none', marginTop: 26 }}>
+                    <Link to="/careers" className="btn-primary" style={{ textDecoration: 'none', marginTop: 26 }}>
                         Join the EVEX Team <ArrowRight size={16} />
-                    </a>
+                    </Link>
                 </div>
                 <div className="team-illustration reveal">
                     <canvas id="team-canvas" style={{ width: '100%', height: '100%', display: 'block' }}></canvas>

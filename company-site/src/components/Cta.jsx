@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { CONTACT } from '../config';
+import { Link } from 'react-router-dom';
 
 const Cta = () => (
     <section>
@@ -16,7 +16,7 @@ const Cta = () => (
                 <a href="#ecosystem" className="btn-primary" style={{ textDecoration: 'none' }}>
                     Explore EVEX <ArrowRight size={16} />
                 </a>
-                <a href={`mailto:${CONTACT.email}`} className="btn-ghost">Contact Us</a>
+                <Link to="/contact" className="btn-ghost">Contact Us</Link>
             </div>
         </div>
     </section>
