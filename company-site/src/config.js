@@ -12,17 +12,16 @@ export const LINKS = {
 export const CONTACT = {
     email: 'hello@evexdigital.com',
     careersEmail: 'careers@evexdigital.com',
-    // TODO: replace with your real phone number / WhatsApp in international format
-    phone: '+234 800 000 0000',
-    whatsapp: 'https://wa.me/2348000000000',
+    phone: '+234 902 766 4131',
+    whatsapp: 'https://wa.me/2349027664131',
     location: 'Nigeria',
     hours: 'Mon – Sat, 9:00 AM – 6:00 PM (WAT)',
 };
 
 export const SOCIALS = [
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/david-moyo-a7279a2b8' },
     { label: 'X (Twitter)', url: '#' },
     { label: 'Instagram', url: '#' },
-    { label: 'LinkedIn', url: '#' },
     { label: 'Facebook', url: '#' },
     { label: 'YouTube', url: '#' },
 ];
