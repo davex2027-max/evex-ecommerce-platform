@@ -21,6 +21,7 @@ COPY controllers/ ./controllers/
 COPY middleware/ ./middleware/
 COPY models/ ./models/
 COPY routes/ ./routes/
+COPY seed/ ./seed/
 COPY seeder.js ./
 COPY --from=build /app/client/dist ./client/dist
 
