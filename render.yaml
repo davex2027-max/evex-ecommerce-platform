@@ -13,7 +13,7 @@ services:
       - key: AUTO_SEED
         value: "true"
       - key: CORS_ORIGIN
-        value: https://evex-company-site.onrender.com,http://localhost:3000
+        value: https://evexcompanysite.netlify.app,https://evex-ecommerce-platform-2.onrender.com,http://localhost:3000
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET

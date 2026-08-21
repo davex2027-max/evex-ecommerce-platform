@@ -3,7 +3,7 @@
 
 export const LINKS = {
     // Live product — the EVEX E-Commerce Platform (Phase 4)
-    businessPlatform: 'https://evex-ecommerce.onrender.com',
+    businessPlatform: 'https://evex-ecommerce-platform-2.onrender.com',
     // Planned products (Phase 2 & 3)
     superApp: '#coming-soon',
     learningHub: '#coming-soon',
