@@ -16,6 +16,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 
 COPY server.js ./
+COPY app.js ./
 COPY config/ ./config/
 COPY controllers/ ./controllers/
 COPY middleware/ ./middleware/
