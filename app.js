@@ -40,9 +40,11 @@ app.use(cors({
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.get('/', (req, res) => {
-  res.send('EVEX E-Commerce Platform is live!');
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.get('/', (req, res) => {
+      res.send('EVEX E-Commerce Platform is live!');
+    });
+}
 
 app.use('/api/products', productRoutes);
 app.use('/api/ads', adRoutes);
