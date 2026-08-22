@@ -22,13 +22,19 @@ app.post('/api/payment/webhook', express.raw({ type: 'application/json' }), pays
 
 app.use(express.json({ limit: '10kb' }));
 
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',');
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',').map(o => o.trim());
+const selfUrl = process.env.RENDER_EXTERNAL_URL || '';
+if (selfUrl && !allowedOrigins.includes(selfUrl)) {
+    allowedOrigins.push(selfUrl);
+}
+
 app.use(cors({
     credentials: true,
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin.trim())) {
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.error('CORS blocked:', origin, 'allowed:', allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
