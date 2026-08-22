@@ -24,7 +24,8 @@ const Login = () => {
 
     return (
         <div className="auth-page">
-            <h2>Login</h2>
+            <h2>Welcome Back</h2>
+            <p className="auth-subtitle">Sign in to your EVEX account</p>
             {formError && <div className="alert alert-error">{formError}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">

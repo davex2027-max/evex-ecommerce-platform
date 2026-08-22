@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -54,8 +55,9 @@ function App() {
                                 } />
                                 <Route path="*" element={<NotFound />} />
                             </Routes>
-                        </main>
-                    </Router>
+                    </main>
+                    <Footer />
+                </Router>
                 </CartProvider>
             </ToastProvider>
         </AuthProvider>

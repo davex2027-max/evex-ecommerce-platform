@@ -24,7 +24,8 @@ const Register = () => {
 
     return (
         <div className="auth-page">
-            <h2>Register</h2>
+            <h2>Create Account</h2>
+            <p className="auth-subtitle">Join EVEX and start shopping today</p>
             {formError && <div className="alert alert-error">{formError}</div>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -47,7 +48,7 @@ const Register = () => {
                         <option value="business_owner">Business Owner</option>
                     </select>
                 </div>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
                     {loading ? 'Registering...' : 'Register'}
                 </button>
             </form>
