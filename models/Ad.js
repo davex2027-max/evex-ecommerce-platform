@@ -31,6 +31,35 @@ const adSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        website: {
+            type: String,
+            default: '',
+        },
+        email: {
+            type: String,
+            default: '',
+        },
+        price: {
+            type: String,
+            default: '',
+        },
+        location: {
+            type: String,
+            default: '',
+        },
+        plan: {
+            type: String,
+            enum: ['free', 'basic', 'premium', 'featured'],
+            default: 'free',
+        },
+        featured: {
+            type: Boolean,
+            default: false,
+        },
+        views: {
+            type: Number,
+            default: 0,
+        },
     },
     { timestamps: true }
 );

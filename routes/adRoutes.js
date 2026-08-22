@@ -11,7 +11,7 @@ const adValidation = [
     body('description').notEmpty().withMessage('Description is required'),
     body('category').notEmpty().withMessage('Category is required'),
     body('contactPhone').notEmpty().withMessage('Contact phone is required'),
-    body('imageUrl').isURL().withMessage('Valid image URL is required'),
+    body('imageUrl').notEmpty().withMessage('Image is required'),
 ];
 
 router.get('/', getAds);
